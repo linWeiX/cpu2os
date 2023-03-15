@@ -6,6 +6,8 @@
 int tokenIdx = 0;
 char *tokens;
 
+//a = bc
+
 int E();
 int F();
 

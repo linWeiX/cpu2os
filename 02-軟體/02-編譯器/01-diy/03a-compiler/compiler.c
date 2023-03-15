@@ -73,7 +73,22 @@ void ASSIGN() {
   skip(";");
   emit("%s = t%d\n", id, e);
 }
+// DO WHILE = do STMT while (E)
+void DOWHILE() {
+  int dowhileBegin = nextLabel();
+  int dowhileEnd = nextLabel();
+  emit("(L%d)\n", dowhileBegin);
+  skip("do");
+  STMT();
+  emit("goto L%d\n", dowhileBegin);
+  emit("(L%d)\n", dowhileEnd);
+  skip("while");
+  skip("(");
+  int e = E();
+  emit("if not T%d goto L%d\n", e, whileEnd);
+  skip(")");
 
+}
 // WHILE = while (E) STMT
 void WHILE() {
   int whileBegin = nextLabel();
@@ -89,15 +104,17 @@ void WHILE() {
   emit("(L%d)\n", whileEnd);
 }
 
-// STMT = WHILE | BLOCK | ASSIGN
+// STMT =  WHILE | BLOCK | ASSIGN | DO
 void STMT() {
   if (isNext("while"))
     WHILE();
   // else if (isNext("if"))
   //   IF();
+  else if (isNext("do"))
+    DOWHILE();
   else if (isNext("{"))
     BLOCK();
-  else
+  else 
     ASSIGN();
 }
 
